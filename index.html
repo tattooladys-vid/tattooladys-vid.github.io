@@ -1,136 +1,93 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Viral Video Hub</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Trending Videos</title>
 <style>
-body{
-  margin:0;
-  background:#020617;
-  font-family:system-ui;
-  color:#e5e7eb;
-}
-.gallery{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-  gap:1rem;
-  padding:1rem;
-}
-.card{
-  background:#0f172a;
-  border-radius:16px;
-  overflow:hidden;
-  box-shadow:0 10px 30px rgba(0,0,0,.5);
-}
-.thumb{
-  position:relative;
-  aspect-ratio:9/16;
-  background:#000;
-}
-.thumb canvas{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-.thumb::after{
-  content:"▶";
-  position:absolute;
-  inset:0;
-  display:grid;
-  place-items:center;
-  font-size:3rem;
-  color:white;
-  background:rgba(0,0,0,.35);
-}
-.card-content{
-  padding:.6rem;
-}
-.card-content p{
-  font-size:.7rem;
-  color:#9ca3af;
-  margin:.3rem 0;
-}
-.watch-btn{
-  display:block;
-  text-align:center;
-  padding:.6rem;
-  border-radius:12px;
-  background:linear-gradient(90deg,#38bdf8,#22c55e);
-  color:#020617;
-  font-weight:800;
-  text-decoration:none;
-}
+body{margin:0;background:#000;color:#fff;font-family:sans-serif}
+h2{text-align:center;padding:14px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:10px}
+.card{position:relative;aspect-ratio:9/16;border-radius:12px;overflow:hidden}
+.card video{width:100%;height:100%;object-fit:cover}
+.label{position:absolute;bottom:0;width:100%;padding:6px;
+background:linear-gradient(to top,rgba(0,0,0,.8),transparent)}
+.read-more-wrap{text-align:center;padding:20px}
+.read-more{padding:10px 24px;border-radius:20px;border:none;cursor:pointer}
 </style>
 </head>
-
 <body>
 
-<h2 style="text-align:center;padding:1rem">🔥 Viral Video Hub</h2>
+<h2>Trending Videos</h2>
+<div class="grid" id="grid"></div>
 
-<main class="gallery" id="gallery"></main>
+<div class="read-more-wrap">
+  <button class="read-more" id="more">Read More</button>
+</div>
 
 <script>
-const username = "tattooladys-vid";
-const repo = "tattooladys-vid.github.io";
+const MAIN=[
+ {id:"om2Pv6KH1",user:"@om2Pv6KH1",src:"om2Pv6KH1.mp4",avatar:"https://i.pravatar.cc/150?img=1"},
+ {id:"lTF4KPtX1",user:"@lTF4KPtX1",src:"https://cdn.videy.co/lTF4KPtX1.mp4",avatar:"https://i.pravatar.cc/150?img=2"},
+ {id:"Vhbr5fp_CeUw1cXa",user:"@Vhbr5fp_CeUw1cXa",src:"Vhbr5fp_CeUw1cXa.mp4",avatar:"https://i.pravatar.cc/150?img=3"},
+ {id:"hHhqxJCjOVhbFsmL",user:"@hHhqxJCjOVhbFsmL",src:"hHhqxJCjOVhbFsmL.mp4",avatar:"https://i.pravatar.cc/150?img=22"},
+ {id:"nWOew5mOHKLMHW2A",user:"@nWOew5mOHKLMHW2A",src:"nWOew5mOHKLMHW2A.mp4",avatar:"https://i.pravatar.cc/150?img=11"},
+ {id:"MYUkx-Fq6yNg3tfl",user:"@MYUkx-Fq6yNg3tfl",src:"MYUkx-Fq6yNg3tfl.mp4",avatar:"https://i.pravatar.cc/150?img=22"},
+ {id:"34umJlcWrLDFZ1q6",user:"@34umJlcWrLDFZ1q6",src:"34umJlcWrLDFZ1q6.mp4",avatar:"https://i.pravatar.cc/150?img=11"},
+ {id:"bCIhkCBl1",user:"@bCIhkCBl1",src:"https://cdn.videy.co/bCIhkCBl1.mp4",avatar:"https://i.pravatar.cc/150?img=22"},
+ {id:"QeOAE6CB1",user:"@QeOAE6CB1",src:"https://cdn.videy.co/QeOAE6CB1.mp4",avatar:"https://i.pravatar.cc/150?img=11"},
+ {id:"9tUFlboH1",user:"@9tUFlboH1",src:"https://cdn.videy.co/9tUFlboH1.mp4",avatar:"https://i.pravatar.cc/150?img=22"},
+ {id:"nvfHWWJ81",user:"@nvfHWWJ81",src:"https://cdn.videy.co/nvfHWWJ81.mp4",avatar:"https://i.pravatar.cc/150?img=11"},
+ {id:"a7eH6ELe1",user:"@a7eH6ELe1",src:"https://cdn.videy.co/a7eH6ELe1.mp4",avatar:"https://i.pravatar.cc/150?img=22"},
+ {id:"BYw0l65T1",user:"@BYw0l65T1",src:"https://cdn.videy.co/BYw0l65T1.mp4",avatar:"https://i.pravatar.cc/150?img=11"},
+ {id:"spz0kQ7l1",user:"@spz0kQ7l1",src:"https://cdn.videy.co/spz0kQ7l1.mp4",avatar:"https://i.pravatar.cc/150?img=11"},
+ {id:"9X2rqPwX1",user:"@9X2rqPwX1",src:"https://cdn.videy.co/9X2rqPwX1.mp4",avatar:"https://i.pravatar.cc/150?img=33"}
+];
 
-const api = `https://api.github.com/repos/${username}/${repo}/contents/`;
-const gallery = document.getElementById("gallery");
+const MORE=[
+ {id:"qN2Su3mj1",user:"@qN2Su3mj1",src:"https://cdn.videy.co/qN2Su3mj1.mp4",avatar:"https://i.pravatar.cc/150?img=11"},
+ {id:"Ri9orsH31",user:"@Ri9orsH31",src:"https://cdn.videy.co/Ri9orsH31.mp4",avatar:"https://i.pravatar.cc/150?img=22"},
+ {id:"aV6DBqgD1",user:"@aV6DBqgD1",src:"https://cdn.videy.co/aV6DBqgD1.mp4",avatar:"https://i.pravatar.cc/150?img=11"},
+ {id:"G9lYsCwu1",user:"@G9lYsCwu1",src:"https://cdn.videy.co/G9lYsCwu1.mp4",avatar:"https://i.pravatar.cc/150?img=22"},
+ {id:"ZZZkMlcd1",user:"@ZZZkMlcd1",src:"https://cdn.videy.co/ZZZkMlcd1.mp4",avatar:"https://i.pravatar.cc/150?img=11"},
+ {id:"Jh0fGBSf1",user:"@Jh0fGBSf1",src:"https://cdn.videy.co/Jh0fGBSf1.mp4",avatar:"https://i.pravatar.cc/150?img=22"},
+ {id:"5EgCgqjJ1",user:"@5EgCgqjJ1",src:"https://cdn.videy.co/5EgCgqjJ1.mp4",avatar:"https://i.pravatar.cc/150?img=11"},
+ {id:"7HOtYFLD1",user:"@7HOtYFLD1",src:"https://cdn.videy.co/7HOtYFLD1.mp4",avatar:"https://i.pravatar.cc/150?img=22"},
+ {id:"l1TrW58Z1",user:"@l1TrW58Z1",src:"https://cdn.videy.co/l1TrW58Z1.mp4",avatar:"https://i.pravatar.cc/150?img=11"},
+ {id:"2uSzlZVu1",user:"@WppYP2UD1",src:"https://cdn.videy.co/WppYP2UD1.mp4",avatar:"https://i.pravatar.cc/150?img=22"},
+ {id:"CHzqn7fd1",user:"@CHzqn7fd1",src:"https://cdn.videy.co/CHzqn7fd1.mp4",avatar:"https://i.pravatar.cc/150?img=11"},
+ {id:"GXBCeFnE1",user:"@GXBCeFnE1",src:"https://cdn.videy.co/GXBCeFnE1.mp4",avatar:"https://i.pravatar.cc/150?img=22"},
+ {id:"L1gX87iM1",user:"@L1gX87iM1",src:"https://cdn.videy.co/L1gX87iM1.mp4",avatar:"https://i.pravatar.cc/150?img=11"},
+ {id:"QeOAE6CB1",user:"@QeOAE6CB1",src:"https://cdn.videy.co/QeOAE6CB1.mp4",avatar:"https://i.pravatar.cc/150?img=11"},
+ {id:"SfsHFSPL1",user:"@SfsHFSPL1",src:"https://cdn.videy.co/SfsHFSPL1.mp4",avatar:"https://i.pravatar.cc/150?img=33"}
+];
+const grid=document.getElementById("grid");
 
-fetch(api)
-.then(res => res.json())
-.then(files => {
-  files
-    .filter(file => file.name.endsWith(".mp4"))
-    .forEach(file => {
+function render(list){
+ list.forEach((v,i)=>{
+  const d=document.createElement("div");
+  d.className="card";
+  d.innerHTML=`
+   <video src="${v.src}#t=0.1" muted playsinline></video>
+   <div class="label">${v.user}</div>`;
+  d.onclick=()=>{
+    localStorage.setItem("VIDEO_LIST",JSON.stringify([...MAIN,...MORE]));
+    localStorage.setItem("START_INDEX",i);
+    location.href="playback.html?vid="+v.id;
+  };
+  grid.appendChild(d);
+ });
+}
 
-      // ✅ URL VIDEO BENAR (TANPA SLASH AKHIR)
-      const videoURL = `https://${username}.github.io/${file.name}`;
+render(MAIN);
 
-      // CARD
-      const card = document.createElement("div");
-      card.className = "card";
-
-      // THUMB
-      const thumb = document.createElement("div");
-      thumb.className = "thumb";
-
-      const canvas = document.createElement("canvas");
-      thumb.appendChild(canvas);
-
-      // VIDEO (untuk ambil thumbnail)
-      const video = document.createElement("video");
-      video.src = videoURL;
-      video.crossOrigin = "anonymous";
-      video.muted = true;
-      video.playsInline = true;
-
-      video.addEventListener("loadeddata", () => {
-        const ctx = canvas.getContext("2d");
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      });
-
-      // CONTENT
-      const content = document.createElement("div");
-      content.className = "card-content";
-      content.innerHTML = `
-        <p>${file.name}</p>
-        <a class="watch-btn" href="${videoURL}">Watch Now</a>
-      `;
-
-      card.appendChild(thumb);
-      card.appendChild(content);
-      gallery.appendChild(card);
-    });
-})
-.catch(err => {
-  gallery.innerHTML = "<p style='color:red'>Failed load videos</p>";
-  console.error(err);
-});
+document.getElementById("more").onclick=()=>{
+ render(MORE);
+ document.getElementById("more").style.display="none";
+};
 </script>
 
 </body>
 </html>
+
