@@ -85,17 +85,21 @@ fetch(api)
     .filter(file => file.name.endsWith(".mp4"))
     .forEach(file => {
 
-      const videoURL = `https://${username}.github.io/${repo}/${file.name}`;
+      // ✅ URL VIDEO BENAR (TANPA SLASH AKHIR)
+      const videoURL = `https://${username}.github.io/${file.name}`;
 
+      // CARD
       const card = document.createElement("div");
       card.className = "card";
 
+      // THUMB
       const thumb = document.createElement("div");
       thumb.className = "thumb";
 
       const canvas = document.createElement("canvas");
       thumb.appendChild(canvas);
 
+      // VIDEO (untuk ambil thumbnail)
       const video = document.createElement("video");
       video.src = videoURL;
       video.crossOrigin = "anonymous";
@@ -109,6 +113,7 @@ fetch(api)
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       });
 
+      // CONTENT
       const content = document.createElement("div");
       content.className = "card-content";
       content.innerHTML = `
@@ -122,7 +127,7 @@ fetch(api)
     });
 })
 .catch(err => {
-  gallery.innerHTML = "<p>Error loading videos</p>";
+  gallery.innerHTML = "<p style='color:red'>Failed load videos</p>";
   console.error(err);
 });
 </script>
