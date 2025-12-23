@@ -1,0 +1,102 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>there’s potential in this moment😍🤪</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: #fff;
+    padding: 20px;
+}
+
+.video-title {
+    font-size: 1em;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.video-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 720px;
+    margin: auto;
+}
+
+video {
+    width: 100%;
+    border-radius: 10px;
+    display: block;
+}
+
+/* Iklan overlay */
+.ad-overlay {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 320px;
+    height: 50px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+}
+
+.ad-top {
+    top: 8px;
+}
+
+.ad-bottom {
+    bottom: 8px;
+}
+
+@media (max-width: 400px) {
+    .ad-overlay {
+        width: 95%;
+        height: 40px;
+    }
+}
+  </style>
+</head>
+<body>
+
+<div class="video-title">there’s potential in this moment😍🤪</div>
+
+<div class="video-wrapper">
+
+    <div class="ad-overlay ad-top">
+<script type="text/javascript">
+    atOptions = {
+        'key' : 'a56d9957870f34de53762968bb2255c5',
+        'format' : 'iframe',
+        'height' : 50,
+        'width' : 320,
+        'params' : {}
+    };
+</script>
+<script src="https://situateddivine.com/a56d9957870f34de53762968bb2255c5/invoke.js"></script>
+</div>
+    <video autoplay loop playsinline controls poster="https://cdn.aceimg.com/6d3bc5d89.jpg">
+        <source src="https://cdn.videy.co/om2Pv6KH1.mp4" type="video/mp4">
+    </video>
+    </div>
+<script async="async" data-cfasync="false" src="https://situateddivine.com/d3e082d534e1581e0f78d3cfe456f0d9/invoke.js"></script>
+<div id="container-d3e082d534e1581e0f78d3cfe456f0d9"></div>
+<!-- Histats.com  START  (aync)-->
+<script type="text/javascript">var _Hasync= _Hasync|| [];
+_Hasync.push(['Histats.start', '1,4992245,4,511,95,18,00000000']);
+_Hasync.push(['Histats.fasi', '1']);
+_Hasync.push(['Histats.track_hits', '']);
+(function() {
+var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+hs.src = ('//s10.histats.com/js15_as.js');
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+})();</script>
+<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4992245&101" alt="" border="0"></a></noscript>
+<!-- Histats.com  END  -->
+</body></html>
