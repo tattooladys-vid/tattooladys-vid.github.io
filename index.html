@@ -1,30 +1,137 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Trending Videos</title>
+<title>Viral Video Hub</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
-body{margin:0;background:#000;color:#fff;font-family:sans-serif}
-h2{text-align:center;padding:14px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:10px}
-.card{position:relative;aspect-ratio:9/16;border-radius:12px;overflow:hidden}
-.card video{width:100%;height:100%;object-fit:cover}
-.label{position:absolute;bottom:0;width:100%;padding:6px;
-background:linear-gradient(to top,rgba(0,0,0,.8),transparent)}
-.read-more-wrap{text-align:center;padding:20px}
-.read-more{padding:10px 24px;border-radius:20px;border:none;cursor:pointer}
+body{
+  margin:0;
+  background:#020617;
+  font-family:system-ui;
+  color:#e5e7eb;
+}
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:1rem;
+  padding:1rem;
+}
+.card{
+  background:#0f172a;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 10px 30px rgba(0,0,0,.5);
+}
+.thumb{
+  position:relative;
+  aspect-ratio:9/16;
+  background:#000;
+}
+.thumb canvas{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.thumb::after{
+  content:"▶";
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  font-size:3rem;
+  color:white;
+  background:rgba(0,0,0,.35);
+}
+.card-content{
+  padding:.6rem;
+}
+.card-content p{
+  font-size:.7rem;
+  color:#9ca3af;
+  margin:.3rem 0;
+}
+.watch-btn{
+  display:block;
+  text-align:center;
+  padding:.6rem;
+  border-radius:12px;
+  background:linear-gradient(90deg,#38bdf8,#22c55e);
+  color:#020617;
+  font-weight:800;
+  text-decoration:none;
+}
 </style>
 </head>
+
 <body>
 
-<h2>Trending Videos</h2>
-<div class="grid" id="grid"></div>
+<h2 style="text-align:center;padding:1rem">🔥 Viral Video Hub</h2>
 
-<div class="read-more-wrap">
-  <button class="read-more" id="more">Read More</button>
-</div>
+<main class="gallery" id="gallery"></main>
+
+<script>
+const username = "tattooladys-vid";
+const repo = "tattooladys-vid.github.io";
+
+const api = `https://api.github.com/repos/${username}/${repo}/contents/`;
+const gallery = document.getElementById("gallery");
+
+fetch(api)
+.then(res => res.json())
+.then(files => {
+  files
+    .filter(file => file.name.endsWith(".mp4"))
+    .forEach(file => {
+
+      // ✅ URL VIDEO BENAR (TANPA SLASH AKHIR)
+      const videoURL = `https://${username}.github.io/${file.name}`;
+
+      // CARD
+      const card = document.createElement("div");
+      card.className = "card";
+
+      // THUMB
+      const thumb = document.createElement("div");
+      thumb.className = "thumb";
+
+      const canvas = document.createElement("canvas");
+      thumb.appendChild(canvas);
+
+      // VIDEO (untuk ambil thumbnail)
+      const video = document.createElement("video");
+      video.src = videoURL;
+      video.crossOrigin = "anonymous";
+      video.muted = true;
+      video.playsInline = true;
+
+      video.addEventListener("loadeddata", () => {
+        const ctx = canvas.getContext("2d");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      });
+
+      // CONTENT
+      const content = document.createElement("div");
+      content.className = "card-content";
+      content.innerHTML = `
+        <p>${file.name}</p>
+        <a class="watch-btn" href="${videoURL}">Watch Now</a>
+      `;
+
+      card.appendChild(thumb);
+      card.appendChild(content);
+      gallery.appendChild(card);
+    });
+})
+.catch(err => {
+  gallery.innerHTML = "<p style='color:red'>Failed load videos</p>";
+  console.error(err);
+});
+</script>
 
 <script>
 const MAIN=[
@@ -74,7 +181,7 @@ function render(list){
   d.onclick=()=>{
     localStorage.setItem("VIDEO_LIST",JSON.stringify([...MAIN,...MORE]));
     localStorage.setItem("START_INDEX",i);
-    location.href="playback.html?vid="+v.id;
+    location.href="${videoURL}"+v.id;
   };
   grid.appendChild(d);
  });
@@ -90,4 +197,3 @@ document.getElementById("more").onclick=()=>{
 
 </body>
 </html>
-
