@@ -3,31 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <title>Viral Video Hub</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body {
+body{
   margin:0;
   background:#020617;
-  color:#e5e7eb;
   font-family:system-ui;
+  color:#e5e7eb;
 }
-.gallery {
+.gallery{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
   gap:1rem;
   padding:1rem;
 }
-.card {
+.card{
   background:#0f172a;
   border-radius:16px;
   overflow:hidden;
-  box-shadow:0 10px 30px rgba(0,0,0,.4);
+  box-shadow:0 10px 30px rgba(0,0,0,.5);
 }
-.thumb {
+.thumb{
+  position:relative;
   aspect-ratio:9/16;
   background:#000;
-  position:relative;
+}
+.thumb canvas{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 .thumb::after{
   content:"▶";
@@ -37,14 +42,18 @@ body {
   place-items:center;
   font-size:3rem;
   color:white;
-  background:rgba(0,0,0,.45);
+  background:rgba(0,0,0,.35);
 }
 .card-content{
   padding:.6rem;
 }
+.card-content p{
+  font-size:.7rem;
+  color:#9ca3af;
+  margin:.3rem 0;
+}
 .watch-btn{
   display:block;
-  margin-top:.4rem;
   text-align:center;
   padding:.6rem;
   border-radius:12px;
@@ -65,34 +74,57 @@ body {
 <script>
 const username = "tattooladys-vid";
 const repo = "tattooladys-vid.github.io";
-const branch = "main";
 
-const apiURL = `https://api.github.com/repos/${username}/${repo}/contents/?ref=${branch}`;
+const api = `https://api.github.com/repos/${username}/${repo}/contents/`;
 const gallery = document.getElementById("gallery");
 
-fetch(apiURL)
-  .then(res => res.json())
-  .then(files => {
-    files
-      .filter(file => file.name.endsWith(".mp4"))
-      .forEach(file => {
-        const videoURL = `https://${username}.github.io/${repo}/${file.name}`;
+fetch(api)
+.then(res => res.json())
+.then(files => {
+  files
+    .filter(file => file.name.endsWith(".mp4"))
+    .forEach(file => {
 
-        gallery.innerHTML += `
-          <div class="card">
-            <div class="thumb"></div>
-            <div class="card-content">
-              <p style="font-size:.7rem;color:#9ca3af">${file.name}</p>
-              <a class="watch-btn" href="${videoURL}">Watch Now</a>
-            </div>
-          </div>
-        `;
+      const videoURL = `https://${username}.github.io/${repo}/${file.name}`;
+
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const thumb = document.createElement("div");
+      thumb.className = "thumb";
+
+      const canvas = document.createElement("canvas");
+      thumb.appendChild(canvas);
+
+      const video = document.createElement("video");
+      video.src = videoURL;
+      video.crossOrigin = "anonymous";
+      video.muted = true;
+      video.playsInline = true;
+
+      video.addEventListener("loadeddata", () => {
+        const ctx = canvas.getContext("2d");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       });
-  })
-  .catch(err => {
-    gallery.innerHTML = "<p style='color:red'>Failed load videos</p>";
-    console.error(err);
-  });
+
+      const content = document.createElement("div");
+      content.className = "card-content";
+      content.innerHTML = `
+        <p>${file.name}</p>
+        <a class="watch-btn" href="${videoURL}">Watch Now</a>
+      `;
+
+      card.appendChild(thumb);
+      card.appendChild(content);
+      gallery.appendChild(card);
+    });
+})
+.catch(err => {
+  gallery.innerHTML = "<p>Error loading videos</p>";
+  console.error(err);
+});
 </script>
 
 </body>
