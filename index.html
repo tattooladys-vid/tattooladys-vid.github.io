@@ -1,1 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Viral Video Hub</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
+<style>
+body {
+  margin:0;
+  background:#020617;
+  color:#e5e7eb;
+  font-family:system-ui;
+}
+.gallery {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:1rem;
+  padding:1rem;
+}
+.card {
+  background:#0f172a;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 10px 30px rgba(0,0,0,.4);
+}
+.thumb {
+  aspect-ratio:9/16;
+  background:#000;
+  position:relative;
+}
+.thumb::after{
+  content:"▶";
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  font-size:3rem;
+  color:white;
+  background:rgba(0,0,0,.45);
+}
+.card-content{
+  padding:.6rem;
+}
+.watch-btn{
+  display:block;
+  margin-top:.4rem;
+  text-align:center;
+  padding:.6rem;
+  border-radius:12px;
+  background:linear-gradient(90deg,#38bdf8,#22c55e);
+  color:#020617;
+  font-weight:800;
+  text-decoration:none;
+}
+</style>
+</head>
+
+<body>
+
+<h2 style="text-align:center;padding:1rem">🔥 Viral Video Hub</h2>
+
+<main class="gallery" id="gallery"></main>
+
+<script>
+const username = "tattooladys-vid";
+const repo = "tattooladys-vid.github.io";
+const branch = "main";
+
+const apiURL = `https://api.github.com/repos/${username}/${repo}/contents/?ref=${branch}`;
+const gallery = document.getElementById("gallery");
+
+fetch(apiURL)
+  .then(res => res.json())
+  .then(files => {
+    files
+      .filter(file => file.name.endsWith(".mp4"))
+      .forEach(file => {
+        const videoURL = `https://${username}.github.io/${repo}/${file.name}`;
+
+        gallery.innerHTML += `
+          <div class="card">
+            <div class="thumb"></div>
+            <div class="card-content">
+              <p style="font-size:.7rem;color:#9ca3af">${file.name}</p>
+              <a class="watch-btn" href="${videoURL}">Watch Now</a>
+            </div>
+          </div>
+        `;
+      });
+  })
+  .catch(err => {
+    gallery.innerHTML = "<p style='color:red'>Failed load videos</p>";
+    console.error(err);
+  });
+</script>
+
+</body>
+</html>
